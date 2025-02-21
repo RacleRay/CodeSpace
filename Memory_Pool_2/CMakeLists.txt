@@ -38,6 +38,11 @@ message(STATUS "[INFO] Found ${header_dir_list_count} header directories.")
 # include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${header_dir_list})
 
+set(SRC ${PROJECT_SOURCE_DIR}/src)
+
+file(GLOB_RECURSE SRC_FILES "${SRC}/*.cpp")
+message(STATUS "[INFO] Found ${SRC_FILES}")
+
 add_subdirectory(./src)
 
 add_subdirectory(./test)
