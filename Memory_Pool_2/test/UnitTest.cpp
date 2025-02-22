@@ -21,12 +21,10 @@ class P4 {
     int id_[20];
 };
 
-// 单轮次申请释放次数 线程数 轮次
 void BenchmarkMemoryPool(size_t ntimes, size_t nworks, size_t rounds) {
-    std::vector<std::thread> vthread(nworks); // 线程池
+    std::vector<std::thread> vthread(nworks);
     size_t total_costtime = 0;
-    for (size_t k = 0; k < nworks; ++k) // 创建 nworks 个线程
-    {
+    for (size_t k = 0; k < nworks; ++k) {
         vthread[k] = std::thread([&]() {
             for (size_t j = 0; j < rounds; ++j) {
                 size_t begin1 = clock();
@@ -48,7 +46,7 @@ void BenchmarkMemoryPool(size_t ntimes, size_t nworks, size_t rounds) {
     }
     for (auto &t : vthread) { t.join(); }
     printf(
-        "%lu个线程并发执行%lu轮次，每轮次newElement&deleteElement %lu次，总计花费：%lu ms\n",
+        "%lu threads %lu rounds, per newElement&deleteElement %lu times. total cost：%lu ms\n",
         nworks, rounds, ntimes, total_costtime);
 }
 
@@ -77,8 +75,8 @@ void BenchmarkNew(size_t ntimes, size_t nworks, size_t rounds) {
     }
     for (auto &t : vthread) { t.join(); }
     printf(
-        "%lu个线程并发执行%lu轮次，每轮次malloc&free %lu次，总计花费：%lu ms\n", nworks, rounds,
-        ntimes, total_costtime);
+        "%lu threads %lu rounds，per malloc&free %lu times. total cost：%lu ms\n",
+        nworks, rounds, ntimes, total_costtime);
 }
 
 int main() {
@@ -87,7 +85,8 @@ int main() {
     // BenchmarkMemoryPool(100, 2, 10);
     // BenchmarkMemoryPool(100, 4, 10);
     BenchmarkMemoryPool(100, 8, 10);
-    std::cout << "=============================================================" << std::endl;
+    std::cout << "============================================================="
+              << std::endl;
     BenchmarkNew(100, 1, 10);
     // BenchmarkNew(100, 2, 10);
     // BenchmarkNew(100, 4, 10);
