@@ -34,7 +34,7 @@ class PageCache {
         Span *next;
     };
 
-    std::map<size_t, Span *> free_spans_;
+    std::map<size_t, Span *> free_spans_;  // num_pages per span -> span
     std::map<void *, Span *> span_map_;
 
     std::mutex mutex_;

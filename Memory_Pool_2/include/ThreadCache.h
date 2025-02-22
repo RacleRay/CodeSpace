@@ -28,7 +28,12 @@ class ThreadCache {
     void returnCentralCache(void *p, size_t size, size_t index);
 
   private:
-    std::array<void *, FREE_LIST_SIZE> free_list_;
+    // for size      : 1~8B, 8B~16B, 16B~24B, ...
+    // index         :  0      1       2      ...
+    // free list head: head   head    head    ...
+    //                  |      |       |
+    //                 next   next    next
+    std::array<void *, FREE_LIST_SIZE> free_lists_;
 };
 
 } // namespace RayCacheMemPool
