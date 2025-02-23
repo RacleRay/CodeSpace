@@ -4,7 +4,6 @@
 
 #include "MemoryPool.h"
 
-// 测试用例
 class P1 {
     int id_;
 };
