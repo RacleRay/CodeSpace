@@ -27,6 +27,8 @@ class ThreadCache {
     void *fetchCentralCache(size_t size);
     void returnCentralCache(void *p, size_t size, size_t index);
 
+    size_t getBatchSize(size_t size);
+
   private:
     // for size      : 1~8B, 8B~16B, 16B~24B, ...
     // index         :  0      1       2      ...

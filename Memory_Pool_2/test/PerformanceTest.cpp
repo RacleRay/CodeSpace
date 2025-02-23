@@ -23,23 +23,25 @@ class PerformanceTest {
     static void warmup() {
         PRINT_BLUE("Warmup memory pool...");
 
-        std::vector<void *> warmupMem;
+        std::vector<std::pair<void *, size_t>> warmupMem;
         constexpr size_t WARMUP_TIMES = 1000;
         for (size_t i = 0; i < WARMUP_TIMES; i++) {
             for (size_t size : {8, 16, 32, 64, 128, 256, 512}) {
                 void *p = MemoryPool::alloc(WARMUP_TIMES);
-                warmupMem.push_back(p);
+                warmupMem.emplace_back(p, size);
             }
         }
 
-        for (void *p : warmupMem) { MemoryPool::dealloc(p, 32); }
+        for (const auto &[p, size] : warmupMem) {
+            MemoryPool::dealloc(p, size);
+        }
 
         PRINTF_GREEN("warmup {} memory alloc done", WARMUP_TIMES);
     };
 
     static void testSmallAlloc() {
-        constexpr size_t TOTAL_ALLOCS = 100000;
-        constexpr size_t SMALL_SIZE = 32;
+        constexpr size_t TOTAL_ALLOCS = 1000000;
+        constexpr size_t SMALL_SIZE = 128;
 
         PRINT_BLUE("\nTesting small alloc...");
         PRINTF_BLUE("Allocating {}, size {}", TOTAL_ALLOCS, SMALL_SIZE);
@@ -93,8 +95,8 @@ class PerformanceTest {
     };
 
     static void testMultiThread() {
-        constexpr size_t NUM_THREADS = 4;
-        constexpr size_t ALLOCS_PER_THREAD = 25000;
+        constexpr size_t NUM_THREADS = 8;
+        constexpr size_t ALLOCS_PER_THREAD = 1000000;
         constexpr size_t MAX_SIZE = 256;
 
         PRINT_BLUE("\nTesting multi-thread alloc...");

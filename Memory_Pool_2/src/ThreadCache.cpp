@@ -30,13 +30,41 @@ void ThreadCache::dealloc(void *p, size_t size) {
 }
 
 void *ThreadCache::fetchCentralCache(size_t index) {
-    void *p = CentralCache::getInstance()->fetchPage(index);
-    if (p == nullptr) { return nullptr; }
+    size_t size = (index + 1) * ALIGNMENT;
+    size_t batch_size = getBatchSize(size);
 
-    void *result = p;
-    free_lists_[index] = reinterpret_cast<void **>(p);
+    void *p_start = CentralCache::getInstance()->fetchRange(index, batch_size);
+    if (p_start == nullptr) { return nullptr; }
+
+    void *result = p_start;
+    if (batch_size > 1) {
+        free_lists_[index] = reinterpret_cast<void **>(p_start);
+    }
 
     return result;
+}
+
+size_t ThreadCache::getBatchSize(size_t size) {
+    constexpr size_t MAX_BATCH_SIZE = 4 * 1024;
+
+    size_t batch_size = 0;
+    if (size <= 32) batch_size = 64;
+    else if (size <= 64)
+        batch_size = 32;
+    else if (size <= 128)
+        batch_size = 16;
+    else if (size <= 256)
+        batch_size = 8;
+    else if (size <= 512)
+        batch_size = 4;
+    else if (size <= 1024)
+        batch_size = 2;
+    else
+        batch_size = 1;
+
+    size_t max_batch_size_avail = std::max(size_t(1), MAX_BATCH_SIZE / size);
+
+    return std::max(size_t(1), std::min(max_batch_size_avail, batch_size));
 }
 
 void ThreadCache::returnCentralCache(void *p, size_t size, size_t unit_size) {
@@ -51,7 +79,7 @@ void ThreadCache::returnCentralCache(void *p, size_t size, size_t unit_size) {
 
     char *split_addr = cur + keep_num * unit_size;
     void *next = *reinterpret_cast<void **>(split_addr);
-    *reinterpret_cast<void **>(split_addr) = nullptr;  // point to nullptr
+    *reinterpret_cast<void **>(split_addr) = nullptr; // point to nullptr
 
     free_lists_[index] = p;
 

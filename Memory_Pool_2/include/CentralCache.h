@@ -16,6 +16,7 @@ class CentralCache {
 
     void *fetchPage(size_t index);
     void returnPage(void *p, size_t index);
+    void *fetchRange(size_t index, size_t batch_size);
 
   private:
     CentralCache() {
