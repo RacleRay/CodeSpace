@@ -1,3 +1,5 @@
+mod stack_list;
+pub mod deque;
 pub mod double;
 pub mod first;
 pub mod second;
@@ -34,7 +36,7 @@ mod tests {
             let ref3 = &mut *ptr2;
             let ptr4 = ref3 as *mut _;
 
-            *ptr2 += 2;
+            // *ptr2 += 2;    // UB if not comment this
 
             *ptr4 += 4;
             *ref3 += 3;
