@@ -21,3 +21,5 @@ add_executable(produce_consumer ./produce_consumer.cpp)
 add_executable(factory ./factory.cpp)
 add_executable(abstract_factory ./abstract_factory.cpp)
 add_executable(builder ./builder.cpp)
+
+add_executable(DI_deco ./DI_deco.cpp)
