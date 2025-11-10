@@ -1,10 +1,6 @@
-mod test;
+mod my_arc;
+mod my_arc_opt;
 
 fn main() {
     println!("Hello, world!");
-
-    // test::threads::test_park();
-    // test::threads::test_condvar();
-    // test::threads::test_atomic();
-    test::threads::test_atomic_2();
 }

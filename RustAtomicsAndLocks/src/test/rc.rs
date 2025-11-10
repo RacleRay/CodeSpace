@@ -1,5 +1,5 @@
+#[cfg(test)]
 mod test {
-
     #[test]
     fn test_rc() {
         use std::rc::Rc;
@@ -21,7 +21,7 @@ mod test {
             let a = a.clone();
             move || {
                 dbg!(a);
-                // a.sort();  // error
+                a.sort();  // error
             }
         });
 

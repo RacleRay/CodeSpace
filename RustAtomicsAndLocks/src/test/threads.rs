@@ -170,6 +170,7 @@ pub(crate) fn test_atomic_2() {
     println!("Done!");
 }
 
+#[cfg(test)]
 mod test {
     #[test]
     fn test_leak() {
