@@ -53,3 +53,4 @@ target/
 perf.data
 compile_commands.json
 
+.spec-workflow
